@@ -12,6 +12,11 @@ class MyFile {
         var dirs = filePath.split("/");
         this.name = dirs[dirs.length - 1];
     }
+
+    public ArrayList<Integer> getAllocatedBlocks() {
+        return allocatedBlocks;
+    }
+
     public void deleteFile(){
         deleted = true;
     }

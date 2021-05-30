@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class PhysicalMemoryManager {
     private static int size;
-    private AllocationStrategy strategy;
+    private static AllocationStrategy strategy;
     public static boolean []bitVector;
 
     public PhysicalMemoryManager(int n, AllocationStrategy strategy) {
@@ -19,14 +19,11 @@ public class PhysicalMemoryManager {
 
     /*use Allocation Functions**/
     public ArrayList<Integer> allocateSpace(int sizeToAllocate){
-
         return strategy.allocate(sizeToAllocate);
     }
-    public boolean deallocateSpace(ArrayList<Integer> allocatedBlocks){
+    public static void deallocateSpace(ArrayList<Integer> allocatedBlocks){
         for (int allocatedBlock : allocatedBlocks) {
-            if (bitVector[allocatedBlock] == false) return false;
             bitVector[allocatedBlock] = false;
         }
-        return true;
     }
 }

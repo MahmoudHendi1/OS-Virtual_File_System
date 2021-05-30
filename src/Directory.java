@@ -1,3 +1,5 @@
+import PhysicalMemory.PhysicalMemoryManager;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -36,8 +38,18 @@ public class Directory {
 
     public void deleteDirectory() {
         this.deleted = true;
+        for (var file : myFiles) {
+            file.deleteFile();
+            PhysicalMemoryManager.deallocateSpace(file.getAllocatedBlocks());
+        }
+        myFiles.clear();
+        for(var dir : subDirectories)
+            dir.deleteDirectory();
+        subDirectories.clear();
     }
-
+    public void deleteFile(MyFile file){
+        myFiles.remove(file);
+    }
     Directory getSubDirectory(String Dir) {
         for (var dir : subDirectories)
             if (dir.getName().equals(Dir))
@@ -58,5 +70,9 @@ public class Directory {
             System.out.println(spaces.toString() + file.getName());
         for (var dir : subDirectories)
             dir.printDirectoryStructure(level + 1);
+    }
+
+    public void deleteSubDirectory(Directory toDel) {
+        subDirectories.remove(toDel);
     }
 }

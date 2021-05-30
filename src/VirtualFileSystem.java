@@ -1,8 +1,6 @@
 import PhysicalMemory.AllocationStrategy;
 import PhysicalMemory.PhysicalMemoryManager;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class VirtualFileSystem {
@@ -60,13 +58,38 @@ public class VirtualFileSystem {
     }
 
     boolean deleteFile(String path) {
-        return false;
-
+        var dirs = path.split("/");
+        System.out.println(Arrays.toString(dirs));
+        var curDir = root;
+        if (!dirs[0].equals("root")) return false;
+        int pos = 1;
+        while (pos < dirs.length - 1) {
+            curDir = curDir.getSubDirectory(dirs[pos++]);
+            if (curDir == null) return false;
+        }
+        var toDel = curDir.getFile(dirs[dirs.length - 1]);
+        if (toDel == null) return false; //not exits
+        curDir.deleteFile(toDel);
+        manager.deallocateSpace(toDel.getAllocatedBlocks());
+        toDel.deleteFile();
+        return true;
     }
 
     boolean deleteFolder(String path) {
-
-        return false;
+        var dirs = path.split("/");
+        System.out.println(Arrays.toString(dirs));
+        var curDir = root;
+        if (!dirs[0].equals("root")) return false;
+        int pos = 1;
+        while (pos < dirs.length - 1) {
+            curDir = curDir.getSubDirectory(dirs[pos++]);
+            if (curDir == null) return false;
+        }
+        var toDel = curDir.getSubDirectory(dirs[pos]);
+        if(toDel==null) return false; //does not exits
+        toDel.deleteDirectory();
+        curDir.deleteSubDirectory(toDel);
+        return true;
     }
 
     void displayDiskStatus() {
@@ -76,7 +99,6 @@ public class VirtualFileSystem {
 
     void displayDiskStructure(){
         root.printDirectoryStructure(0);
-
     }
 
 
