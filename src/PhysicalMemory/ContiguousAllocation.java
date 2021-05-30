@@ -24,6 +24,8 @@ public class ContiguousAllocation implements AllocatoinStrategy {
         ArrayList<Integer> allocated = new ArrayList<>();
         for (int i = bstIdx, j = 0; j < size; ++j, ++i)
             allocated.add(i);
+        for(var i : allocated)
+            bitVector[i] = true;
         return allocated;
     }
 }

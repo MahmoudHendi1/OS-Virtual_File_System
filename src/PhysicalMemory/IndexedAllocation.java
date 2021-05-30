@@ -11,7 +11,9 @@ public class IndexedAllocation implements AllocatoinStrategy {
         for (int i = 0; i < N; ++i)
             if (!bitVector[i])
                 allocated.add(i);
-        if (allocated.size() >= size + 1) return allocated; // extra space for the index
-        return null;
+        if (allocated.size() < size + 1) return null; // extra space for the index
+        for (var i : allocated)
+            bitVector[i] = true;
+        return allocated;
     }
 }
