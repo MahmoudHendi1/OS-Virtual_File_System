@@ -1,12 +1,13 @@
 package PhysicalMemory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PhysicalMemoryManager {
+public class PhysicalMemoryManager implements Serializable {
     private static int size;
     private static AllocationStrategy strategy;
     public static boolean []bitVector;
-
+    private static final long serialVersionUID = "PhysicalMemoryManager".hashCode();
     public PhysicalMemoryManager(int n, AllocationStrategy strategy) {
         size = n;
         bitVector = new boolean[size];

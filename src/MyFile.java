@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-class MyFile {
+class MyFile implements Serializable {
     private String filePath,name;
     private ArrayList<Integer> allocatedBlocks;
     private boolean deleted;
-
+    private static final long serialVersionUID = "MyFile".hashCode();
     public MyFile(String filePath, ArrayList<Integer> allocatedBlocks) {
         this.filePath = filePath;
         this.allocatedBlocks = allocatedBlocks;
@@ -29,4 +30,13 @@ class MyFile {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "MyFile{" +
+                "filePath='" + filePath + '\'' +
+                ", name='" + name + '\'' +
+                ", allocatedBlocks=" + allocatedBlocks +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

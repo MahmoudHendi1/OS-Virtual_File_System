@@ -1,3 +1,5 @@
+import Persitience.DataStreamer;
+import Persitience.FileDataStreamer;
 import PhysicalMemory.AllocationStrategy;
 import PhysicalMemory.ContiguousAllocation;
 import PhysicalMemory.IndexedAllocation;
@@ -8,6 +10,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+        DataStreamer persist = new FileDataStreamer();
         Scanner sc = new Scanner(System.in);
         Parser parser = new Parser();
         System.out.println("Enter disk size (in KBs)"); // disk size is the number of blocks where each block is 1 KB in size
@@ -44,10 +47,9 @@ public class Main {
 
 
         if (!vfsPath.equalsIgnoreCase("0")){
-             vfs= new VirtualFileSystem(vfsPath, n, strategy);
-        }
-        else {
-             vfs = new VirtualFileSystem(n, strategy);
+            vfs= new VirtualFileSystem(vfsPath, n, strategy);
+        } else {
+            vfs = new VirtualFileSystem(n, strategy);
         }
 
         System.out.println("Enter commands");
@@ -98,18 +100,18 @@ public class Main {
                     System.out.println("not a valid command!");
             }
             /*
-            *
-            * System.out.println("Do you want to save the changes? (y/n)");
-            * boolean choice;
-            * choice = sc.nextBoolean();
-            * if (choice){
-            *   // save change into file
-            * }
-            * else {
-            *   // clear file
-            * }
-            *
-            * */
+             *
+             * System.out.println("Do you want to save the changes? (y/n)");
+             * boolean choice;
+             * choice = sc.nextBoolean();
+             * if (choice){
+             *   // save change into file
+             * }
+             * else {
+             *   // clear file
+             * }
+             *
+             * */
         }
 
     }

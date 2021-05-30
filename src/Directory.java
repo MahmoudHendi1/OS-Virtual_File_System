@@ -1,13 +1,14 @@
 import PhysicalMemory.PhysicalMemoryManager;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Directory {
+public class Directory implements Serializable {
     private String directoryPath, name;
     private ArrayList<MyFile> myFiles;
     private ArrayList<Directory> subDirectories;
-
+    private static final long serialVersionUID = "Directory".hashCode();
     public Directory(String directoryPath, String name) {
         this.directoryPath = directoryPath;
         this.name = name;
@@ -74,5 +75,16 @@ public class Directory {
 
     public void deleteSubDirectory(Directory toDel) {
         subDirectories.remove(toDel);
+    }
+
+    @Override
+    public String toString() {
+        return "Directory{" +
+                "directoryPath='" + directoryPath + '\'' +
+                ", name='" + name + '\'' +
+                ", myFiles=" + myFiles +
+                ", subDirectories=" + subDirectories +
+                ", deleted=" + deleted +
+                '}';
     }
 }

@@ -1,13 +1,15 @@
 import PhysicalMemory.AllocationStrategy;
 import PhysicalMemory.PhysicalMemoryManager;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class VirtualFileSystem {
+public class VirtualFileSystem implements Serializable {
     File virtualFileSystemFile;
     Directory root;
     PhysicalMemoryManager manager;
     AllocationStrategy allocationStrategy;
+    private static final long serialVersionUID = "VirtualFileSystem".hashCode();
     public VirtualFileSystem(String vfsPath, int diskSize, AllocationStrategy strategy) {
         this.virtualFileSystemFile = new File(vfsPath);
         /*Parse the file and load the file into the memory (yet to specify the data structure*/
@@ -102,5 +104,13 @@ public class VirtualFileSystem {
     }
 
 
-
+    @Override
+    public String toString() {
+        return "VirtualFileSystem{" +
+                "virtualFileSystemFile=" + virtualFileSystemFile +
+                ", root=" + root +
+                ", manager=" + manager +
+                ", allocationStrategy=" + allocationStrategy +
+                '}';
+    }
 }
