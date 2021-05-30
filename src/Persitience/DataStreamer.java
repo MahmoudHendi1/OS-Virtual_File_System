@@ -1,6 +1,6 @@
 package Persitience;
 
 public interface DataStreamer {
-    String filePath = "";
-    void save();
+   void save(Object oj, String filePath);
+   Object read(String filePath);
 }
