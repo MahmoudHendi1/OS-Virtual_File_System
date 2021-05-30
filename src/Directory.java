@@ -1,10 +1,16 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Directory {
     private String directoryPath,name;
-    private File[] files;
+    private MyFile[] myFiles;
     private Directory[] subDirectories;
+
+    public Directory() {
+    }
+
+    public Directory(String directoryPath, String name) {
+        this.directoryPath = directoryPath;
+        this.name = name;
+    }
+
     private boolean deleted = false;
 
 
@@ -16,7 +22,7 @@ public class Directory {
 
         System.out.println(spaces.toString()+name);
         spaces.append(' ');
-        for (var file : files)
+        for (var file : myFiles)
             System.out.println(spaces.toString() + file.getName());
         for (var dir : subDirectories)
             dir.printDirectoryStructure(level + 1);

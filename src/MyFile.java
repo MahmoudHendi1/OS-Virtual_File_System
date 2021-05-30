@@ -1,11 +1,12 @@
-class File {
+class MyFile {
     private String filePath,name;
     private int[] allocatedBlocks;
     private boolean deleted;
 
-    public File(String filePath, int[] allocatedBlocks) {
+    public MyFile(String filePath, int[] allocatedBlocks) {
         this.filePath = filePath;
         this.allocatedBlocks = allocatedBlocks;
+        this.deleted =false;
     }
     public void delete(){
         deleted = true;

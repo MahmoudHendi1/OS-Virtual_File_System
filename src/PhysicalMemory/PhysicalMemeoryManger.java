@@ -11,4 +11,13 @@ public class PhysicalMemeoryManger {
         return size;
     }
 
+    /*use Allocation Functions**/
+    boolean allocateSpace(int sizeToAllocate){
+
+        return false;
+    }
+    boolean deallocateSpace(int sizeToDeallocate){
+
+        return false;
+    }
 }
