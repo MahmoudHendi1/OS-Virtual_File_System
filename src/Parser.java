@@ -33,7 +33,4 @@ public class Parser {
     public ArrayList<String> getArgument(){
         return args;
     }
-    public static void main(String[] args){
-        for (String str : "    hello world   ".trim().split(" ")) System.out.println(str);
-    }
 }

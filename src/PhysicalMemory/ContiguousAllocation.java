@@ -2,11 +2,11 @@ package PhysicalMemory;
 
 import java.util.ArrayList;
 
-public class ContiguousAllocation implements AllocatoinStrategy {
+public class ContiguousAllocation implements AllocationStrategy {
     @Override
-    public ArrayList<Integer> Allocate(int size) {
-        int N = PhysicalMemeoryManger.getSize();
-        var bitVector = PhysicalMemeoryManger.bitVector;
+    public ArrayList<Integer> allocate(int size) {
+        int N = PhysicalMemoryManager.getSize();
+        var bitVector = PhysicalMemoryManager.bitVector;
         int bstIdx = -1, bst = -1, lst = -1;
         for (int i = 0; i < N - 1; ++i) {
             if (!bitVector[i] && lst == -1)

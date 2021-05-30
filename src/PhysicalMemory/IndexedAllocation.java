@@ -2,12 +2,12 @@ package PhysicalMemory;
 
 import java.util.ArrayList;
 
-public class IndexedAllocation implements AllocatoinStrategy {
+public class IndexedAllocation implements AllocationStrategy {
     @Override
-    public ArrayList<Integer> Allocate(int size) {
+    public ArrayList<Integer> allocate(int size) {
         ArrayList<Integer> allocated = new ArrayList<>();
-        int N = PhysicalMemeoryManger.getSize();
-        var bitVector = PhysicalMemeoryManger.bitVector;
+        int N = PhysicalMemoryManager.getSize();
+        var bitVector = PhysicalMemoryManager.bitVector;
         for (int i = 0; i < N; ++i)
             if (!bitVector[i])
                 allocated.add(i);
