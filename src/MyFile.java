@@ -8,7 +8,9 @@ class MyFile {
     public MyFile(String filePath, ArrayList<Integer> allocatedBlocks) {
         this.filePath = filePath;
         this.allocatedBlocks = allocatedBlocks;
-        this.deleted =false;
+        this.deleted = false;
+        var dirs = filePath.split("/");
+        this.name = dirs[dirs.length - 1];
     }
     public void deleteFile(){
         deleted = true;

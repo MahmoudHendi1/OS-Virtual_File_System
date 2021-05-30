@@ -8,17 +8,18 @@ public class ContiguousAllocation implements AllocationStrategy {
         int N = PhysicalMemoryManager.getSize();
         var bitVector = PhysicalMemoryManager.bitVector;
         int bstIdx = -1, bst = -1, lst = -1;
-        for (int i = 0; i < N - 1; ++i) {
+        for (int i = 0; i < N; ++i) {
+            if (lst == -1 && bitVector[i])
+                continue;
             if (!bitVector[i] && lst == -1)
                 lst = i;
-            else if (!bitVector[i] && bitVector[i + 1]) {
-                if (bst < i - lst) {
-                    bst = i - lst;
-                    bstIdx = i;
+            if (!bitVector[i]) {
+                if (bst < i - lst +1) {
+                    bst = i - lst +1;
+                    bstIdx = lst;
                 }
-            } else if (bitVector[i] && !bitVector[i + 1])
-                lst = i + 1;
-
+            } else
+                lst = -1;
         }
         if (bst < size) return null;
         ArrayList<Integer> allocated = new ArrayList<>();

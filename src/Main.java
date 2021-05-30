@@ -55,15 +55,16 @@ public class Main {
         while(!quit){
             input = sc.nextLine();
             parser.parse(input);
-
-            switch (parser.getCmd().toLowerCase()){
-                case "createFile":
+            String line = parser.getCmd();
+            switch (line) {
+                case "createFile": {
                     // taking path and file size
-                    if (parser.getArgument().size() == 2)
+                    if (parser.getArgument().size() == 2) {
                         vfs.createFile(parser.getArgument().get(0), Integer.parseInt(parser.getArgument().get(1)));
-                    else
+                    } else
                         System.out.println("invalid arguments");
                     break;
+                }
                 case "createFolder":
                     if (parser.getArgument().size() == 1)
                         vfs.createFolder(parser.getArgument().get(0));

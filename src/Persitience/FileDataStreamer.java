@@ -1,6 +1,7 @@
 package Persitience;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class FileDataStreamer implements DataStreamer {
     static void writeToFile(Object t, String filePath) {
@@ -64,10 +65,12 @@ public class FileDataStreamer implements DataStreamer {
         t.createChild();
         t.child.createChild();
        // writeToFile(t,"D:\\AOS\\test.txt");
-        */
+
         TestData t = (TestData) readFromFile("D:\\AOS\\test.txt");
         System.out.println(t.toString());
-
+        */
+        var x = "helloklsdmvclk;s".split("/");
+        System.out.println(Arrays.toString(x));
 
     }
 }
