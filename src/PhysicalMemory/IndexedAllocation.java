@@ -1,8 +1,10 @@
 package PhysicalMemory;
 
-public class IndexedAllocation implements AllocatoinStrategy{
-    @Override
-    public void Allocate(int size) {
+import java.util.ArrayList;
 
+public class IndexedAllocation implements AllocatoinStrategy {
+    @Override
+    public ArrayList<Integer> Allocate(int size) {
+        return null;
     }
 }

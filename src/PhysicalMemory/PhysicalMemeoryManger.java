@@ -1,13 +1,13 @@
 package PhysicalMemory;
 
 public class PhysicalMemeoryManger {
-    private int size;
-
+    private static int size;
+    public static boolean []bitVector;
     public PhysicalMemeoryManger(int n) {
-        size = n;
+        size = n;bitVector = new boolean[size];
     }
 
-    public int getSize() {
+    public static int getSize() {
         return size;
     }
 

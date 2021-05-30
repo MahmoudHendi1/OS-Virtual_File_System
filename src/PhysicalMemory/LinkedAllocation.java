@@ -1,8 +1,10 @@
 package PhysicalMemory;
 
+import java.util.ArrayList;
+
 public class LinkedAllocation implements AllocatoinStrategy{
     @Override
-    public void Allocate(int size) {
-
+    public ArrayList<Integer> Allocate(int size) {
+        return null;
     }
 }

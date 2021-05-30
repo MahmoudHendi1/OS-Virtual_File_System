@@ -1,5 +1,7 @@
 package PhysicalMemory;
 
+import java.util.ArrayList;
+
 public interface AllocatoinStrategy {
-    void Allocate(int size);
+    ArrayList<Integer> Allocate(int size);
 }
