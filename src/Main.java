@@ -16,27 +16,61 @@ public class Main {
         VirtualFileSystem vfs = null;
         boolean doneLoadin = true;
         // try load
-        try {
-           var tmp = (boolean[]) persist.read("Static.txt");
-            vfs = (VirtualFileSystem) persist.read("Data.txt");
-            PhysicalMemoryManager.setBitVector(tmp);
-            PhysicalMemoryManager.setSize(tmp.length);
+//        try {
+//           var tmp = (boolean[]) persist.read("Static.txt");
+//            vfs = (VirtualFileSystem) persist.read("Data.txt");
+//            PhysicalMemoryManager.setBitVector(tmp);
+//            PhysicalMemoryManager.setSize(tmp.length);
+//
+//        } catch (Exception ex) {
+//            System.out.println("Loading Failed!");
+//            doneLoadin = false;
+//        }
+        String vfsPath = "";
 
-        } catch (Exception ex) {
-            System.out.println("Loading Failed!");
-            doneLoadin = false;
+        while(!vfsPath.equalsIgnoreCase("y") && !vfsPath.equalsIgnoreCase("n")) {
+            System.out.println("Do you wish to load file structure from path? (y/n)");
+            vfsPath = sc.nextLine();
+        }
+
+        if (vfsPath.equalsIgnoreCase("y")){
+            vfsPath = "";
+            while(!vfsPath.equalsIgnoreCase("y") && !vfsPath.equalsIgnoreCase("n")) {
+                System.out.println("Use default path? (y/n)");
+                vfsPath = sc.nextLine();
+            }
+
+            if (vfsPath.equalsIgnoreCase("y")){
+                vfsPath = "./";
+            }
+            else {
+                System.out.println("Enter Disk structure file path containing both static.txt & data.txt.");
+                vfsPath = sc.nextLine(); ///If a file doesn't exist, it will be created by the program
+            }
+
+            try {
+                var tmp = (boolean[]) persist.read(vfsPath + "\\static.txt");
+                vfs = (VirtualFileSystem) persist.read(vfsPath + "\\data.txt");
+                PhysicalMemoryManager.setBitVector(tmp);
+                PhysicalMemoryManager.setSize(tmp.length);
+
+            } catch (Exception ex) {
+                System.out.println("Loading Failed!");
+                doneLoadin = false;
+            }
+
         }
         doneLoadin = vfs != null;
 
         if (!doneLoadin) {
             System.out.println("Enter disk size (in KBs)"); // disk size is the number of blocks where each block is 1 KB in size
             int n;
-            n = sc.nextInt();
+            n = Integer.parseInt(sc.nextLine());
 
             int choice = 1;
             do {
                 System.out.println("Enter allocation method:\n1. Contiguous allocation\n2. Indexed allocation\n3. LinkedAllocation\n");
-                choice = sc.nextInt();
+                choice = Integer.parseInt(sc.nextLine());
             } while (choice < 1 || choice > 3);
 
             switch (choice) {
@@ -52,18 +86,9 @@ public class Main {
                 default:
             }
 
-
-            System.out.println("Enter Disk structure file path.");
-            String vfsPath;
-            sc.nextLine(); ///If a file doesn't exist, it will be created by the program
-            vfsPath = sc.nextLine();
-
-            if (!vfsPath.equalsIgnoreCase("0")) {
-                vfs = new VirtualFileSystem(vfsPath, n, strategy);
-            } else {
-                vfs = new VirtualFileSystem(n, strategy);
-            }
+            vfs = new VirtualFileSystem(n, strategy);
         }
+
         System.out.println("Enter commands");
         String input; boolean quit = false;
         while(!quit){
@@ -114,8 +139,8 @@ public class Main {
             }
 
         }
-        persist.save(vfs, "Data.txt");
-        persist.save((PhysicalMemoryManager.getBitVector()), "Static.txt");
+        persist.save(vfs, "data.txt");
+        persist.save((PhysicalMemoryManager.getBitVector()), "static.txt");
 
     }
 
