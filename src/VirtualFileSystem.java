@@ -131,7 +131,6 @@ public class VirtualFileSystem implements Serializable {
 
     boolean deleteFolder(String path) {
         var dirs = path.split("/");
-//        System.out.println(Arrays.toString(dirs));
         var curDir = root;
         if(dirs.length == 1){
             System.out.println("Invalid Command");
@@ -161,8 +160,26 @@ public class VirtualFileSystem implements Serializable {
     }
 
     void displayDiskStatus() {
-
-
+        var bitVector = PhysicalMemoryManager.getBitVector();
+        int sz = bitVector.length;
+        int cnt = 0;
+        System.out.println("Used Blocks Are");
+        for (int i = 0; i < sz; ++i) {
+            if (bitVector[i]) {
+                cnt++;
+                System.out.print(i + " ,");
+            }
+        }
+        System.out.println("Total used Blocks  = " + cnt);
+        System.out.println("Free Blocks Are:");
+        cnt = 0;
+        for (int i = 0; i < sz; ++i) {
+            if (!bitVector[i]) {
+                cnt++;
+                System.out.print(i + " ,");
+            }
+        }
+        System.out.println("Total free Blocks  = " + cnt);
     }
 
     void displayDiskStructure(){
