@@ -17,7 +17,7 @@ public class IndexedAllocation implements AllocationStrategy , Serializable {
         int N = PhysicalMemoryManager.getSize();
         var bitVector = PhysicalMemoryManager.bitVector;
         for (int i = 0; i < N; ++i) {
-            if (allocated.size() >= size) break;
+            if (allocated.size() >= size +1) break;
                 if (!bitVector[i])
                     allocated.add(i);
         }

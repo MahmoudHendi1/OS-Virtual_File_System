@@ -179,13 +179,12 @@ public class VirtualFileSystem implements Serializable {
                 System.out.print(i + " ,");
             }
         }
-        System.out.println("Total free Blocks  = " + cnt);
+        System.out.println("\nTotal free Blocks  = " + cnt);
     }
 
     void displayDiskStructure(){
         root.printDirectoryStructure(0);
     }
-
 
     @Override
     public String toString() {
