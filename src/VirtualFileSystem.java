@@ -170,7 +170,7 @@ public class VirtualFileSystem implements Serializable {
                 System.out.print(i + " ,");
             }
         }
-        System.out.println("Total used Blocks  = " + cnt);
+        System.out.println("\nTotal used Blocks  = " + cnt);
         System.out.println("Free Blocks Are:");
         cnt = 0;
         for (int i = 0; i < sz; ++i) {

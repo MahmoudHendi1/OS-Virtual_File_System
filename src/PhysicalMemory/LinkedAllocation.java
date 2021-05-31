@@ -16,9 +16,11 @@ public class LinkedAllocation implements AllocationStrategy, Serializable {
         ArrayList<Integer> allocated = new ArrayList<>();
         int N = PhysicalMemoryManager.getSize();
         var bitVector = PhysicalMemoryManager.bitVector;
-        for (int i = 0; i < N; ++i)
+        for (int i = 0; i < N; ++i) {
+            if (allocated.size() >= size) break;
             if (!bitVector[i])
                 allocated.add(i);
+        }
         if (allocated.size() < size) return null;
         for(var i : allocated)
             bitVector[i] = true;
