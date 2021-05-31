@@ -10,7 +10,7 @@ public class FileDataStreamer implements DataStreamer {
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(t);
             objectOut.close();
-            System.out.println("The Object  was succesfully written to a file");
+            System.out.println("The Object is successfully written to a file");
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -48,7 +48,11 @@ public class FileDataStreamer implements DataStreamer {
     @Override
     public Object read(String filePath) {
         try {
-            FileInputStream fi = new FileInputStream(new File(filePath));
+            File file = new File(filePath);
+            if (file.length() == 0 ){ //if file is empty
+                return null;
+            }
+            FileInputStream fi = new FileInputStream(file);
             ObjectInputStream oi = new ObjectInputStream(fi);
             Object ret = oi.readObject();
             oi.close();

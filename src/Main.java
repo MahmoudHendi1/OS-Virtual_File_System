@@ -41,10 +41,8 @@ public class Main {
 
 
         System.out.println("Enter Disk structure file path.");
-        String vfsPath; sc.nextLine();
+        String vfsPath; sc.nextLine(); ///If a file doesn't exist, it will be created by the program
         vfsPath = sc.nextLine();
-        System.out.println(vfsPath);
-
 
         if (!vfsPath.equalsIgnoreCase("0")){
             vfs= new VirtualFileSystem(vfsPath, n, strategy);
@@ -99,19 +97,7 @@ public class Main {
                 default:
                     System.out.println("not a valid command!");
             }
-            /*
-             *
-             * System.out.println("Do you want to save the changes? (y/n)");
-             * boolean choice;
-             * choice = sc.nextBoolean();
-             * if (choice){
-             *   // save change into file
-             * }
-             * else {
-             *   // clear file
-             * }
-             *
-             * */
+
         }
 
     }

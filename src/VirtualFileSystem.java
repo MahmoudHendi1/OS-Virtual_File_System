@@ -1,3 +1,4 @@
+import Persitience.FileDataStreamer;
 import PhysicalMemory.AllocationStrategy;
 import PhysicalMemory.PhysicalMemoryManager;
 import java.io.File;
@@ -5,20 +6,28 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class VirtualFileSystem implements Serializable {
-    File virtualFileSystemFile;
     Directory root;
     PhysicalMemoryManager manager;
     AllocationStrategy allocationStrategy;
+    FileDataStreamer fds;
+    String virtualFileSystemFilePath;
     private static final long serialVersionUID = "VirtualFileSystem".hashCode();
+
+
     public VirtualFileSystem(String vfsPath, int diskSize, AllocationStrategy strategy) {
-        this.virtualFileSystemFile = new File(vfsPath);
+        this.virtualFileSystemFilePath = vfsPath;
+        fds = new FileDataStreamer();
         /*Parse the file and load the file into the memory (yet to specify the data structure*/
-        root = new Directory("/", "root");
+        root = (Directory) fds.read(vfsPath);
+        if(root==null){
+            root = new Directory(vfsPath,"root");
+        }
         manager = new PhysicalMemoryManager(diskSize, strategy);
         this.allocationStrategy = strategy;
     }
 
     public VirtualFileSystem(int diskSize, AllocationStrategy strategy) {
+        fds = new FileDataStreamer();
         manager = new PhysicalMemoryManager(diskSize, strategy);
         root = new Directory("/", "root");
         this.allocationStrategy = strategy;
@@ -26,19 +35,34 @@ public class VirtualFileSystem implements Serializable {
 
     boolean createFile(String path, int size) {
         var dirs = path.split("/");
-        System.out.println(Arrays.toString(dirs));
+//        System.out.println(Arrays.toString(dirs));
         var curDir = root;
-        if (!dirs[0].equals("root")) return false;
+        if (!dirs[0].equals("root")) {
+            System.out.println("Invalid path!");
+            return false;
+        }
         int pos = 1;
         while (pos < dirs.length - 1) {
             curDir = curDir.getSubDirectory(dirs[pos++]);
-            if (curDir == null) return false;
+            if (curDir == null) {
+                System.out.println("Invalid path!");
+                return false;
+            }
         }
         //valid path
         var allocated = allocationStrategy.allocate(size);
-        if (allocated == null) return false; //no space
-        if (curDir.getFile(dirs[pos]) != null) return false; //already exits
+        if (allocated == null){ //no space
+            System.out.println("Not enough space!");
+            return false;
+        }
+        if (curDir.getFile(dirs[pos]) != null) {
+            System.out.println("File already exists with this name!");
+            return false;} //already exits
         curDir.addFile(new MyFile(path, allocated));
+        fds.save(root,virtualFileSystemFilePath); //saving the updates in the file
+
+        displayDiskStructure();
+
         return true;
 
 
@@ -46,51 +70,86 @@ public class VirtualFileSystem implements Serializable {
 
     boolean createFolder(String path) {
         var dirs = path.split("/");
-        System.out.println(Arrays.toString(dirs));
+//        System.out.println(Arrays.toString(dirs));
         var curDir = root;
-        if (!dirs[0].equals("root")) return false;
+        if (!dirs[0].equals("root")){
+            System.out.println("Invalid path!");
+            return false;}
         int pos = 1;
         while (pos < dirs.length - 1) {
             curDir = curDir.getSubDirectory(dirs[pos++]);
-            if (curDir == null) return false;
+            if (curDir == null) {
+                System.out.println("Invalid path");
+                return false;}
         }
-        if(curDir.getSubDirectory(dirs[pos])!=null) return false; // already exists
+        if(curDir.getSubDirectory(dirs[pos])!=null) {
+            System.out.println("A directory already exists with this name!");
+            return false;} // already exists
         curDir.addDirectory(new Directory(path, dirs[pos]));
+        fds.save(root,virtualFileSystemFilePath); ///saving the updates in the file
+        displayDiskStructure();
+
         return true;
     }
 
     boolean deleteFile(String path) {
         var dirs = path.split("/");
-        System.out.println(Arrays.toString(dirs));
+//        System.out.println(Arrays.toString(dirs));
         var curDir = root;
-        if (!dirs[0].equals("root")) return false;
+        if (!dirs[0].equals("root")) {
+            System.out.println("Invalid path!");
+            return false;
+        }
         int pos = 1;
         while (pos < dirs.length - 1) {
             curDir = curDir.getSubDirectory(dirs[pos++]);
-            if (curDir == null) return false;
+            if (curDir == null) {
+                System.out.println("Invalid path!");
+                return false;
+            }
         }
         var toDel = curDir.getFile(dirs[dirs.length - 1]);
-        if (toDel == null) return false; //not exits
+        if (toDel == null) {
+            System.out.println("No such file or directory!");
+            return false;
+        } //not exits
         curDir.deleteFile(toDel);
         manager.deallocateSpace(toDel.getAllocatedBlocks());
         toDel.deleteFile();
+        fds.save(root,"D:\\disk.txt"); ///make the file static
+        displayDiskStructure();
         return true;
     }
 
     boolean deleteFolder(String path) {
         var dirs = path.split("/");
-        System.out.println(Arrays.toString(dirs));
+//        System.out.println(Arrays.toString(dirs));
         var curDir = root;
-        if (!dirs[0].equals("root")) return false;
+        if(dirs.length == 1){
+            System.out.println("Invalid Command");
+            return false;
+        }
+        if (!dirs[0].equals("root")) {
+            System.out.println("Invalid path!");
+            return false;
+        }
         int pos = 1;
         while (pos < dirs.length - 1) {
             curDir = curDir.getSubDirectory(dirs[pos++]);
-            if (curDir == null) return false;
+            if (curDir == null) {
+                System.out.println("Invalid path!");
+                return false;
+            }
         }
         var toDel = curDir.getSubDirectory(dirs[pos]);
-        if(toDel==null) return false; //does not exits
+        if(toDel==null) {
+            System.out.println("No such file or directory!");
+            return false; //does not exits
+        }
         toDel.deleteDirectory();
         curDir.deleteSubDirectory(toDel);
+        fds.save(root,"D:\\disk.txt"); ///make the file static
+        displayDiskStructure();
         return true;
     }
 
@@ -107,7 +166,6 @@ public class VirtualFileSystem implements Serializable {
     @Override
     public String toString() {
         return "VirtualFileSystem{" +
-                "virtualFileSystemFile=" + virtualFileSystemFile +
                 ", root=" + root +
                 ", manager=" + manager +
                 ", allocationStrategy=" + allocationStrategy +

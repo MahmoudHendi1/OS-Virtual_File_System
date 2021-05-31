@@ -63,10 +63,10 @@ public class Directory implements Serializable {
 
         StringBuilder spaces = new StringBuilder();
         for (int i = 0; i < level; ++i)
-            spaces.append(' ');
+            spaces.append('\t');
 
-        System.out.println(spaces.toString() + name);
-        spaces.append(' ');
+        System.out.println(spaces.toString() + '<'+name + '>');
+        spaces.append('\t');
         for (var file : myFiles)
             System.out.println(spaces.toString() + file.getName());
         for (var dir : subDirectories)
