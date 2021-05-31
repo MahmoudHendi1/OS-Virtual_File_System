@@ -4,18 +4,12 @@ import java.io.*;
 import java.util.Arrays;
 
 public class FileDataStreamer implements DataStreamer {
-    static void writeToFile(Object t, String filePath) {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(new File(filePath));
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(t);
-            objectOut.close();
-            System.out.println("The Object is successfully written to a file");
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+    static void writeToFile(Object t, String filePath) throws Exception {
+        FileOutputStream fileOut = new FileOutputStream(new File(filePath));
+        ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+        objectOut.writeObject(t);
+        objectOut.close();
+        System.out.println("The Object is successfully written to a file");
     }
 
     static Object readFromFile(String filePath) {
@@ -32,7 +26,8 @@ public class FileDataStreamer implements DataStreamer {
         return null;
     }
 
-    @Override
+   // @Override
+    /*
     public void save(Object obj, String filePath) {
         try {
             FileOutputStream fileOut = new FileOutputStream(new File(filePath));
@@ -44,7 +39,7 @@ public class FileDataStreamer implements DataStreamer {
             ex.printStackTrace();
         }
     }
-
+*/
     @Override
     public Object read(String filePath) {
         try {

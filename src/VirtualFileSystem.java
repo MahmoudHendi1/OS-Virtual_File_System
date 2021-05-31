@@ -18,10 +18,7 @@ public class VirtualFileSystem implements Serializable {
         this.virtualFileSystemFilePath = vfsPath;
         fds = new FileDataStreamer();
         /*Parse the file and load the file into the memory (yet to specify the data structure*/
-        root = (Directory) fds.read(vfsPath);
-        if(root==null){
-            root = new Directory(vfsPath,"root");
-        }
+        root = new Directory(vfsPath,"root");
         manager = new PhysicalMemoryManager(diskSize, strategy);
         this.allocationStrategy = strategy;
     }
@@ -59,7 +56,7 @@ public class VirtualFileSystem implements Serializable {
             System.out.println("File already exists with this name!");
             return false;} //already exits
         curDir.addFile(new MyFile(path, allocated));
-        fds.save(root,virtualFileSystemFilePath); //saving the updates in the file
+
 
         displayDiskStructure();
 
@@ -86,7 +83,7 @@ public class VirtualFileSystem implements Serializable {
             System.out.println("A directory already exists with this name!");
             return false;} // already exists
         curDir.addDirectory(new Directory(path, dirs[pos]));
-        fds.save(root,virtualFileSystemFilePath); ///saving the updates in the file
+
         displayDiskStructure();
 
         return true;
@@ -116,7 +113,6 @@ public class VirtualFileSystem implements Serializable {
         curDir.deleteFile(toDel);
         manager.deallocateSpace(toDel.getAllocatedBlocks());
         toDel.deleteFile();
-        fds.save(root,"D:\\disk.txt"); ///make the file static
         displayDiskStructure();
         return true;
     }
@@ -148,7 +144,6 @@ public class VirtualFileSystem implements Serializable {
         }
         toDel.deleteDirectory();
         curDir.deleteSubDirectory(toDel);
-        fds.save(root,"D:\\disk.txt"); ///make the file static
         displayDiskStructure();
         return true;
     }

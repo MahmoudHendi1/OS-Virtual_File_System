@@ -10,46 +10,57 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+
         DataStreamer persist = new FileDataStreamer();
         Scanner sc = new Scanner(System.in);
         Parser parser = new Parser();
-        System.out.println("Enter disk size (in KBs)"); // disk size is the number of blocks where each block is 1 KB in size
-        int n;
-        n = sc.nextInt();
-
-        int choice = 1;
-        do {
-            System.out.println("Enter allocation method:\n1. Contiguous allocation\n2. Indexed allocation\n3. LinkedAllocation\n");
-            choice = sc.nextInt();
-        } while(choice < 1 || choice > 3);
-
         AllocationStrategy strategy = null;
-        switch(choice){
-            case 1:
-                strategy = new ContiguousAllocation();
-                break;
-            case 2:
-                strategy = new IndexedAllocation();
-                break;
-            case 3:
-                strategy = new LinkedAllocation();
-                break;
-            default:
+        VirtualFileSystem vfs = null;
+        boolean doneLoadin = true;
+        // try load
+        try {
+            vfs = (VirtualFileSystem) persist.read("Data.txt");
+        } catch (Exception ex) {
+            System.out.println("Loading Failed!");
+            doneLoadin = false;
         }
+        doneLoadin = vfs!=null;
+        if (!doneLoadin) {
+            System.out.println("Enter disk size (in KBs)"); // disk size is the number of blocks where each block is 1 KB in size
+            int n;
+            n = sc.nextInt();
 
-        VirtualFileSystem vfs;
+            int choice = 1;
+            do {
+                System.out.println("Enter allocation method:\n1. Contiguous allocation\n2. Indexed allocation\n3. LinkedAllocation\n");
+                choice = sc.nextInt();
+            } while (choice < 1 || choice > 3);
+
+            switch (choice) {
+                case 1:
+                    strategy = new ContiguousAllocation();
+                    break;
+                case 2:
+                    strategy = new IndexedAllocation();
+                    break;
+                case 3:
+                    strategy = new LinkedAllocation();
+                    break;
+                default:
+            }
 
 
-        System.out.println("Enter Disk structure file path.");
-        String vfsPath; sc.nextLine(); ///If a file doesn't exist, it will be created by the program
-        vfsPath = sc.nextLine();
+            System.out.println("Enter Disk structure file path.");
+            String vfsPath;
+            sc.nextLine(); ///If a file doesn't exist, it will be created by the program
+            vfsPath = sc.nextLine();
 
-        if (!vfsPath.equalsIgnoreCase("0")){
-            vfs= new VirtualFileSystem(vfsPath, n, strategy);
-        } else {
-            vfs = new VirtualFileSystem(n, strategy);
+            if (!vfsPath.equalsIgnoreCase("0")) {
+                vfs = new VirtualFileSystem(vfsPath, n, strategy);
+            } else {
+                vfs = new VirtualFileSystem(n, strategy);
+            }
         }
-
         System.out.println("Enter commands");
         String input; boolean quit = false;
         while(!quit){
@@ -100,5 +111,9 @@ public class Main {
 
         }
 
+
     }
+
+
 }
+

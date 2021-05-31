@@ -1,8 +1,17 @@
 package PhysicalMemory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ContiguousAllocation implements AllocationStrategy {
+public class ContiguousAllocation implements AllocationStrategy , Serializable {
+
+    private static final long serialVersionUID = "ContiguousAllocation".hashCode();
+
+    @Override
+    public String toString() {
+        return "ContiguousAllocation{}";
+    }
+
     @Override
     public ArrayList<Integer> allocate(int size) {
         int N = PhysicalMemoryManager.getSize();

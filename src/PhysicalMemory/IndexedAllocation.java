@@ -1,8 +1,16 @@
 package PhysicalMemory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class IndexedAllocation implements AllocationStrategy {
+public class IndexedAllocation implements AllocationStrategy , Serializable {
+    private static final long serialVersionUID = "IndexedAllocation".hashCode();
+
+    @Override
+    public String toString() {
+        return "IndexedAllocation{}";
+    }
+
     @Override
     public ArrayList<Integer> allocate(int size) {
         ArrayList<Integer> allocated = new ArrayList<>();
