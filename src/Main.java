@@ -1,10 +1,8 @@
 import Persitience.DataStreamer;
 import Persitience.FileDataStreamer;
-import PhysicalMemory.AllocationStrategy;
-import PhysicalMemory.ContiguousAllocation;
-import PhysicalMemory.IndexedAllocation;
-import PhysicalMemory.LinkedAllocation;
+import PhysicalMemory.*;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -19,12 +17,17 @@ public class Main {
         boolean doneLoadin = true;
         // try load
         try {
+           var tmp = (boolean[]) persist.read("Static.txt");
             vfs = (VirtualFileSystem) persist.read("Data.txt");
+            PhysicalMemoryManager.setBitVector(tmp);
+            PhysicalMemoryManager.setSize(tmp.length);
+
         } catch (Exception ex) {
             System.out.println("Loading Failed!");
             doneLoadin = false;
         }
-        doneLoadin = vfs!=null;
+        doneLoadin = vfs != null;
+
         if (!doneLoadin) {
             System.out.println("Enter disk size (in KBs)"); // disk size is the number of blocks where each block is 1 KB in size
             int n;
@@ -67,6 +70,7 @@ public class Main {
             input = sc.nextLine();
             parser.parse(input);
             String line = parser.getCmd();
+            if (line == null) line = "";
             switch (line) {
                 case "createFile": {
                     // taking path and file size
@@ -110,7 +114,8 @@ public class Main {
             }
 
         }
-
+        persist.save(vfs, "Data.txt");
+        persist.save((PhysicalMemoryManager.getBitVector()), "Static.txt");
 
     }
 

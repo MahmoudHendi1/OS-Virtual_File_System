@@ -13,6 +13,9 @@ public class VirtualFileSystem implements Serializable {
     String virtualFileSystemFilePath;
     private static final long serialVersionUID = "VirtualFileSystem".hashCode();
 
+    public void setManager(PhysicalMemoryManager manager) {
+        this.manager = manager;
+    }
 
     public VirtualFileSystem(String vfsPath, int diskSize, AllocationStrategy strategy) {
         this.virtualFileSystemFilePath = vfsPath;
@@ -21,6 +24,15 @@ public class VirtualFileSystem implements Serializable {
         root = new Directory(vfsPath,"root");
         manager = new PhysicalMemoryManager(diskSize, strategy);
         this.allocationStrategy = strategy;
+    }
+    public  VirtualFileSystem(VirtualFileSystem cpy){
+        this.virtualFileSystemFilePath = cpy.virtualFileSystemFilePath;
+        fds = cpy.fds;
+        /*Parse the file and load the file into the memory (yet to specify the data structure*/
+        root = cpy.root;
+        manager = cpy.manager;
+        System.out.println("disk size = " + PhysicalMemoryManager.getSize());
+        this.allocationStrategy = cpy.allocationStrategy;
     }
 
     public VirtualFileSystem(int diskSize, AllocationStrategy strategy) {

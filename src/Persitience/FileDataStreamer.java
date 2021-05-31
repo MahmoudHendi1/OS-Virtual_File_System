@@ -1,9 +1,20 @@
 package Persitience;
 
+import PhysicalMemory.ContiguousAllocation;
+import PhysicalMemory.PhysicalMemoryManager;
+
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.Arrays;
 
-public class FileDataStreamer implements DataStreamer {
+public class FileDataStreamer implements DataStreamer,Serializable {
+    private static final long serialVersionUID = "FileDataStreamer".hashCode();
+
+    @Override
+    public String toString() {
+        return "FileDataStreamer{}";
+    }
+
     static void writeToFile(Object t, String filePath) throws Exception {
         FileOutputStream fileOut = new FileOutputStream(new File(filePath));
         ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
@@ -26,8 +37,7 @@ public class FileDataStreamer implements DataStreamer {
         return null;
     }
 
-   // @Override
-    /*
+    @Override
     public void save(Object obj, String filePath) {
         try {
             FileOutputStream fileOut = new FileOutputStream(new File(filePath));
@@ -39,7 +49,7 @@ public class FileDataStreamer implements DataStreamer {
             ex.printStackTrace();
         }
     }
-*/
+
     @Override
     public Object read(String filePath) {
         try {
@@ -55,21 +65,16 @@ public class FileDataStreamer implements DataStreamer {
             return ret;
         } catch (Exception ex) {
             ex.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public static void main(String[] args) {
-       /* TestData t = new TestData(0);
-        t.createChild();
-        t.child.createChild();
-       // writeToFile(t,"D:\\AOS\\test.txt");
+        PhysicalMemoryManager ps;
+        DataStreamer ds = new FileDataStreamer();
+        ps = (PhysicalMemoryManager) ds.read("lol.txt");
 
-        TestData t = (TestData) readFromFile("D:\\AOS\\test.txt");
-        System.out.println(t.toString());
-        */
-        var x = "helloklsdmvclk;s".split("/");
-        System.out.println(Arrays.toString(x));
+
 
     }
 }
