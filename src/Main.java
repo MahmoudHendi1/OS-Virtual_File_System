@@ -2,12 +2,13 @@ import Persitience.DataStreamer;
 import Persitience.FileDataStreamer;
 import PhysicalMemory.*;
 
-import java.util.Arrays;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         DataStreamer persist = new FileDataStreamer();
         Scanner sc = new Scanner(System.in);
@@ -105,6 +106,34 @@ public class Main {
                         System.out.println("invalid arguments");
                     break;
                 }
+                case "login":
+                    if(parser.getArgument().size() == 2){
+                        try {
+                            vfs.login(parser.getArgument().get(0),parser.getArgument().get(1));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        System.out.println("invalid arguments");
+                    }
+                    break;
+                case "TellUser":
+                    vfs.user.tellUser();
+                    break;
+                case "Grant":
+                    if(parser.getArgument().size() == 3) {
+                        vfs.user.grant(parser.getArgument().get(0),parser.getArgument().get(1),parser.getArgument().get(2));
+                    }else{
+                        System.out.println("invalid arguments");
+                    }
+                    break;
+                case "CUser":
+                    if(parser.getArgument().size() == 2) {
+                        vfs.user.CUser(parser.getArgument().get(0),parser.getArgument().get(1));
+                    }else{
+                        System.out.println("invalid arguments");
+                    }
+                    break;
                 case "createFolder":
                     if (parser.getArgument().size() == 1)
                         vfs.createFolder(parser.getArgument().get(0));

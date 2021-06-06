@@ -2,10 +2,23 @@ import Persitience.FileDataStreamer;
 import PhysicalMemory.AllocationStrategy;
 import PhysicalMemory.PhysicalMemoryManager;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class VirtualFileSystem implements Serializable {
+    User user;
+
+    {
+        try {
+            user = UserSys.login("admin","admin",this);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     Directory root;
     PhysicalMemoryManager manager;
     AllocationStrategy allocationStrategy;
@@ -36,13 +49,35 @@ public class VirtualFileSystem implements Serializable {
     }
 
     public VirtualFileSystem(int diskSize, AllocationStrategy strategy) {
+
         fds = new FileDataStreamer();
         manager = new PhysicalMemoryManager(diskSize, strategy);
         root = new Directory("/", "root");
         this.allocationStrategy = strategy;
     }
 
-    boolean createFile(String path, int size) {
+    boolean isDir(String path){
+        var dirs = path.split("/");
+//        System.out.println(Arrays.toString(dirs));
+        var curDir = root;
+        if (!dirs[0].equals("root")){
+            System.out.println("Invalid path!");
+            return false;
+        }
+        int pos = 1;
+        while (pos < dirs.length - 1) {
+            curDir = curDir.getSubDirectory(dirs[pos++]);
+            if (curDir == null) {
+                System.out.println("Invalid path");
+                return false;
+            }
+        }
+        if(curDir.getSubDirectory(dirs[pos])!=null)
+            return true;
+
+        return false;
+    }
+    boolean createFile(String path, int size) throws IOException {
         var dirs = path.split("/");
 //        System.out.println(Arrays.toString(dirs));
         var curDir = root;
@@ -51,12 +86,19 @@ public class VirtualFileSystem implements Serializable {
             return false;
         }
         int pos = 1;
+        StringBuilder path2= new StringBuilder(dirs[0]);
+
         while (pos < dirs.length - 1) {
+            path2.append('/').append(dirs[pos]);
             curDir = curDir.getSubDirectory(dirs[pos++]);
             if (curDir == null) {
                 System.out.println("Invalid path!");
                 return false;
             }
+        }
+        if(user.role==0 &&UserSys.getGrants(user.name,path2.toString()).charAt(0)!='1'){
+            System.out.println("You don't have the grant to create a folder");
+            return false;
         }
         //valid path
         var allocated = allocationStrategy.allocate(size);
@@ -77,7 +119,7 @@ public class VirtualFileSystem implements Serializable {
 
     }
 
-    boolean createFolder(String path) {
+    boolean createFolder(String path) throws IOException {
         var dirs = path.split("/");
 //        System.out.println(Arrays.toString(dirs));
         var curDir = root;
@@ -85,15 +127,24 @@ public class VirtualFileSystem implements Serializable {
             System.out.println("Invalid path!");
             return false;}
         int pos = 1;
+        StringBuilder path2= new StringBuilder(dirs[0]);
+
         while (pos < dirs.length - 1) {
+            path2.append('/').append(dirs[pos]);
             curDir = curDir.getSubDirectory(dirs[pos++]);
             if (curDir == null) {
                 System.out.println("Invalid path");
                 return false;}
         }
+
+        if(user.role==0 &&UserSys.getGrants(user.name,path2.toString()).charAt(0)!='1'){
+            System.out.println("You don't have the grant to create a folder");
+            return false;
+        }
         if(curDir.getSubDirectory(dirs[pos])!=null) {
             System.out.println("A directory already exists with this name!");
-            return false;} // already exists
+            return false;
+        } // already exists
         curDir.addDirectory(new Directory(path, dirs[pos]));
 
         displayDiskStructure();
@@ -101,7 +152,7 @@ public class VirtualFileSystem implements Serializable {
         return true;
     }
 
-    boolean deleteFile(String path) {
+    boolean deleteFile(String path) throws IOException {
         var dirs = path.split("/");
 //        System.out.println(Arrays.toString(dirs));
         var curDir = root;
@@ -110,7 +161,11 @@ public class VirtualFileSystem implements Serializable {
             return false;
         }
         int pos = 1;
+
+        StringBuilder path2= new StringBuilder(dirs[0]);
+
         while (pos < dirs.length - 1) {
+            path2.append('/').append(dirs[pos]);
             curDir = curDir.getSubDirectory(dirs[pos++]);
             if (curDir == null) {
                 System.out.println("Invalid path!");
@@ -122,6 +177,11 @@ public class VirtualFileSystem implements Serializable {
             System.out.println("No such file or directory!");
             return false;
         } //not exits
+
+        if(user.role==0 &&UserSys.getGrants(user.name,path2.toString()).charAt(1)!='1'){
+            System.out.println("You don't have the grant to delete this file");
+            return false;
+        }
         curDir.deleteFile(toDel);
         manager.deallocateSpace(toDel.getAllocatedBlocks());
         toDel.deleteFile();
@@ -129,7 +189,7 @@ public class VirtualFileSystem implements Serializable {
         return true;
     }
 
-    boolean deleteFolder(String path) {
+    boolean deleteFolder(String path) throws IOException {
         var dirs = path.split("/");
         var curDir = root;
         if(dirs.length == 1){
@@ -141,7 +201,10 @@ public class VirtualFileSystem implements Serializable {
             return false;
         }
         int pos = 1;
+        StringBuilder path2= new StringBuilder(dirs[0]);
+
         while (pos < dirs.length - 1) {
+            path2.append('/').append(dirs[pos]);
             curDir = curDir.getSubDirectory(dirs[pos++]);
             if (curDir == null) {
                 System.out.println("Invalid path!");
@@ -153,10 +216,26 @@ public class VirtualFileSystem implements Serializable {
             System.out.println("No such file or directory!");
             return false; //does not exits
         }
+        if(user.role==0 &&UserSys.getGrants(user.name,path2.toString()).charAt(1)!='1'){
+            System.out.println("You don't have the grant to delete this folder");
+            return false;
+        }
         toDel.deleteDirectory();
         curDir.deleteSubDirectory(toDel);
         displayDiskStructure();
         return true;
+    }
+
+    boolean login(String name , String pass) throws FileNotFoundException {
+        User tmp=UserSys.login(name,pass,this);
+        if(Objects.isNull(tmp)){
+            System.out.println("Invalid User or Password");
+            return false;
+        }
+        user=tmp;
+        System.out.println("You are logged in, Welcome "+name+ "!");
+        return true;
+
     }
 
     void displayDiskStatus() {
